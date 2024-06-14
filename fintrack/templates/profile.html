@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Profile</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    {% if account.profile_picture %}
+                        <img src="{{ account.profile_picture.url }}" class="img-fluid rounded-circle" alt="Profile Picture">
+                    {% else %}
+                        <img src="{% static 'default_profile_picture.png' %}" class="img-fluid rounded-circle" alt="Default Profile Picture">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    {% if account %}
+                        <h4>{{ request.user.username }}</h4>
+                        <p><strong>Balance:</strong> {{ account.balance }} {{ local_currency_symbol }}</p>
+                    {% else %}
+                        <h4>{{ request.user.username }}</h4>
+                        <p>No account details available.</p>
+                    {% endif %}
+                    <a href="{% url 'expense_create' %}" class="btn btn-primary mt-3">Add Expense</a>
+                    <a href="{% url 'expenses' %}" class="btn btn-info mt-3">View All Expenses</a>
+                    <a href="{% url 'edit_profile' %}" class="btn btn-secondary mt-3">Edit Profile</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Canvas -->
+    <div class="mt-5">
+        <h2>Expense Trends</h2>
+        <div class="form-group">
+            <label for="chartType">Select Chart Type:</label>
+            <select id="chartType" class="form-control" style="width: 200px;">
+                <option value="line">Line</option>
+                <option value="bar">Bar</option>
+                <option value="pie">Pie</option>
+                <option value="doughnut">Doughnut</option>
+            </select>
+        </div>
+        <canvas id="expenseChart" width="800" height="400"></canvas>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var expenseData = JSON.parse('{{ expense_data_json|escapejs }}');
+    var ctx = document.getElementById('expenseChart').getContext('2d');
+
+    var chartType = 'line';
+    var expenseChart = new Chart(ctx, {
+        type: chartType,
+        data: {
+            labels: expenseData.labels,
+            datasets: [{
+                label: 'Total Expenses',
+                data: expenseData.data,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    document.getElementById('chartType').addEventListener('change', function() {
+        var selectedType = this.value;
+        expenseChart.destroy();
+        expenseChart = new Chart(ctx, {
+            type: selectedType,
+            data: {
+                labels: expenseData.labels,
+                datasets: [{
+                    label: 'Total Expenses',
+                    data: expenseData.data,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

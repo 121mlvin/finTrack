@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Financial Tracker{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to Financial Tracker!</h1>
+    <p class="lead">Track your expenses, visualize your financial habits, and take control of your finances.</p>
+    {% if not user.is_authenticated %}
+        <hr class="my-4">
+        <p>Sign up today and start managing your finances like a pro.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}" role="button">Sign Up</a>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Examples of Visualized Financial Data</h2>
+            <canvas id="exampleChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+{% csrf_token %}
+
+<script>
+    var ctx = document.getElementById('exampleChart').getContext('2d');
+    var exampleChart = new Chart(ctx, {
+        type: 'bar', // or 'line', 'pie', etc.
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May'],
+            datasets: [{
+                label: 'Expenses',
+                data: [120, 150, 180, 200, 170],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Expenses</h1>
+
+    <form method="GET" action="{% url 'expense_search' %}">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search by description" name="q" value="{{ request.GET.q }}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ expense.description }}</td>
+                <td>{{ expense.price }}</td>
+                <td>{{ expense.date_of_spending }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No expenses found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
