@@ -6,6 +6,11 @@ Financial Tracker is a Django-based web application designed to help users manag
 - User Authentication and Registration: Allows users to sign up, log in, and manage their accounts securely.
 
 - Expense Tracking: Users can add, edit, and delete expenses, categorizing them into predefined types (e.g., Clothes, Food, Transport).
+- Currency Determinant: The application automatically determines the user's currency based on their location:
+  - Users from the US will see balances in dollars (USD).
+  - Users from Poland will see balances in zloty (PLN).
+
+ - Profile Picture: Users can set a profile picture to personalize their accounts.
 
 - Visualization: Provides charts and graphs to visualize spending patterns over time, helping users understand their financial habits better.
 ## Technologies Used
